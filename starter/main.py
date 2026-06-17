@@ -2,6 +2,7 @@
 from balance.balance import Balance
 from balance.balance_observer import LowBalanceAlertObserver
 from balance.balance_observer import PrintObserver
+from balance.report_strategy import SimpleSummaryStrategy, DetailedSummaryStrategy
 from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 from transaction.transaction_adapter import TransactionAdapter
@@ -36,6 +37,12 @@ def main():
     for transaction in all_transactions:
         balance.apply_transaction(transaction)
 
+    # Strategy pattern: simple summary (default)
+    balance.set_report_strategy(SimpleSummaryStrategy())
+    print(balance.summary())
+
+    # Strategy pattern: swap to detailed summary
+    balance.set_report_strategy(DetailedSummaryStrategy())
     print(balance.summary())
 
 if __name__ == "__main__":
