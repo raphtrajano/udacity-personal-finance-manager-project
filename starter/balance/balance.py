@@ -3,6 +3,7 @@
 from transaction.transaction_category import TransactionCategory
 from balance.report_strategy import SimpleSummaryStrategy
 
+
 class Balance:
     """Singleton to track the balance."""
 
@@ -92,4 +93,3 @@ class Balance:
     def summary(self):
         """Generate a report using the current report strategy."""
         return self._report_strategy.generate(self)
-    

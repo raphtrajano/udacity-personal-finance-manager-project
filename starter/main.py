@@ -45,5 +45,6 @@ def main():
     balance.set_report_strategy(DetailedSummaryStrategy())
     print(balance.summary())
 
+
 if __name__ == "__main__":
     main()
