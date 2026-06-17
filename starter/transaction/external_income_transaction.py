@@ -6,4 +6,4 @@ class ExternalFreelanceIncome:
         self.amount = amount
         self.invoice_id = invoice_id
         self.description = description
-        self.typ = "income"  # fixed, since it’s always income
+        self.type = "income"  # fixed, since it’s always income
