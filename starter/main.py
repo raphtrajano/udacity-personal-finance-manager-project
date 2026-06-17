@@ -7,6 +7,8 @@ from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 from transaction.transaction_adapter import TransactionAdapter
 from transaction.external_income_transaction import ExternalFreelanceIncome
+from transaction.transaction_command import ApplyTransactionCommand
+from transaction.transaction_history import TransactionHistory
 
 
 def main():
@@ -33,17 +35,28 @@ def main():
 
     all_transactions = transactions + [adapted_transaction]
 
-    # Apply all transactions to balance
+    # Command pattern: apply all transactions via history
+    history = TransactionHistory()
     for transaction in all_transactions:
-        balance.apply_transaction(transaction)
+        history.execute(ApplyTransactionCommand(transaction))
 
     # Strategy pattern: simple summary (default)
     balance.set_report_strategy(SimpleSummaryStrategy())
     print(balance.summary())
 
+    # Command pattern: undo last transaction and show updated balance
+    print("\n----- Undoing last transaction -----")
+    history.undo()
+    print(balance.summary())
+
+    # Command pattern: redo the undone transaction
+    print("\n----- Redoing last transaction -----")
+    history.redo()
+    print(balance.summary())
+
     # Strategy pattern: swap to detailed summary
     balance.set_report_strategy(DetailedSummaryStrategy())
-    print(balance.summary())
+    print(f"\n{balance.summary()}")
 
 
 if __name__ == "__main__":

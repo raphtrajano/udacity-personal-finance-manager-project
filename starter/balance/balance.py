@@ -78,6 +78,22 @@ class Balance:
             raise ValueError(f"Unknown transaction category: {transaction.category}")
         self.notify_observers(transaction)
 
+    def reverse_transaction(self, transaction):
+        """
+        Reverse a previously applied transaction (used by undo).
+
+        Args:
+            transaction (Transaction): The transaction to reverse.
+        """
+        if transaction.category == TransactionCategory.INCOME:
+            self._total_balance -= transaction.amount
+            self._total_income -= transaction.amount
+        elif transaction.category == TransactionCategory.EXPENSE:
+            self._total_balance += transaction.amount
+            self._total_expenses -= transaction.amount
+        else:
+            raise ValueError(f"Unknown transaction category: {transaction.category}")
+
     def get_balance(self):
         """Get the current net balance."""
         return self._total_balance
