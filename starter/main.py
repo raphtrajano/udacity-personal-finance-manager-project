@@ -1,5 +1,6 @@
 """This module serves as the entry point for the program."""
 from balance.balance import Balance
+from balance.balance_decorator import LoggingDecorator, ValidationDecorator
 from balance.balance_observer import LowBalanceAlertObserver
 from balance.balance_observer import PrintObserver
 from balance.report_strategy import SimpleSummaryStrategy, DetailedSummaryStrategy
@@ -39,6 +40,11 @@ def main():
     history = TransactionHistory()
     for transaction in all_transactions:
         history.execute(ApplyTransactionCommand(transaction))
+
+    # Decorator pattern: wrap balance with logging + validation
+    decorated_balance = LoggingDecorator(ValidationDecorator(balance))
+    print("\n----- Decorator pattern demo -----")
+    decorated_balance.apply_transaction(Transaction(500, TransactionCategory.INCOME))
 
     # Strategy pattern: simple summary (default)
     balance.set_report_strategy(SimpleSummaryStrategy())
