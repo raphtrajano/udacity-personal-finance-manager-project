@@ -3,6 +3,7 @@ from balance.balance import Balance
 from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 
+
 class TestBalance(unittest.TestCase):
 
     def setUp(self):
@@ -17,6 +18,12 @@ class TestBalance(unittest.TestCase):
         balance2 = Balance.get_instance()
         self.assertIs(balance1, balance2)
 
+    def test_singleton_same_state(self):
+        b1 = Balance.get_instance()
+        b1.add_income(25)
+        b2 = Balance.get_instance()
+        self.assertEqual(b2.get_balance(), 25)
+
     def test_add_income(self):
         self.balance.add_income(100)
         self.assertEqual(self.balance.get_balance(), 100)
@@ -24,6 +31,11 @@ class TestBalance(unittest.TestCase):
     def test_add_expense(self):
         self.balance.add_expense(40)
         self.assertEqual(self.balance.get_balance(), -40)
+
+    def test_add_income_accumulates(self):
+        self.balance.add_income(25)
+        self.balance.add_income(50)
+        self.assertEqual(self.balance.get_balance(), 75)
 
     def test_apply_transaction_income(self):
         t = Transaction(150, TransactionCategory.INCOME)
@@ -42,11 +54,29 @@ class TestBalance(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.balance.apply_transaction(t)
 
+    def test_total_income_tracked(self):
+        self.balance.add_income(100)
+        self.balance.add_income(200)
+        self.assertEqual(self.balance.get_total_income(), 300)
+
+    def test_total_expenses_tracked(self):
+        self.balance.add_expense(50)
+        self.balance.add_expense(30)
+        self.assertEqual(self.balance.get_total_expenses(), 80)
+
     def test_reset(self):
         self.balance.add_income(100)
         self.balance.add_expense(50)
         self.balance.reset()
         self.assertEqual(self.balance.get_balance(), 0.0)
+
+    def test_reset_clears_totals(self):
+        self.balance.add_income(100)
+        self.balance.add_expense(50)
+        self.balance.reset()
+        self.assertEqual(self.balance.get_total_income(), 0.0)
+        self.assertEqual(self.balance.get_total_expenses(), 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()
