@@ -1,6 +1,6 @@
 # Design pattern reflection
 
-In this project, we implemented four design patterns: Singleton, Adapter, Observer, and Strategy (this last one chosen by me).
+In this project, we implemented six design patterns: Singleton, Adapter, Observer, Strategy, Command, and Decorator.
 
 **Singleton** is important to guarantee that only one instance is created, avoiding duplicates. This is essential to prevent conflicts and compromised data. Although it introduces global state, which can make testing and tracking dependencies harder, it helps maintain data integrity, which is crucial in a finance project.
 
@@ -9,3 +9,7 @@ In this project, we implemented four design patterns: Singleton, Adapter, Observ
 **Observer** deals with notifications and is event-driven. It's useful for tracking specific events and triggering an action when an expected condition is met. In this project, it notifies users when a threshold is reached, alerting them that a safe limit has been surpassed. One challenge here was making sure observers don't introduce tight coupling with the subject, since too much logic leaking into the notification step can make it harder to keep the subject simple and decoupled.
 
 **Strategy** is useful when we want to apply a different algorithm without modifying the main logic. I chose this pattern because it allows us to generate different types of net reports without changing the core reporting code. This guarantees flexibility and makes the system easier to test and scale. The trade-off is a bit more upfront complexity, introducing multiple strategy classes even for simpler reporting cases.
+
+**Command** helps decouple the object that triggers an action (the invoker) from the object that performs it (the receiver), by encapsulating a request as a self-contained object. It allows operations to be stored, executed, and reversed. In this project, it powers the undo/redo functionality. Each applied transaction can be undone and redone without the balance needing to know anything about history management. The trade-off is the added overhead of maintaining undo and redo stacks, and the need to implement a `reverse_transaction` operation on the balance.
+
+**Decorator** allows us to add behavior to an object without modifying its class. In this project, it adds logging and validation around `apply_transaction()` in a composable way. Decorators can be stacked so that validation runs first, then logging wraps the result. The trade-off is that stacking many decorators can make the call chain harder to follow, and the wrapped object must expose a consistent interface for delegation to work correctly.
